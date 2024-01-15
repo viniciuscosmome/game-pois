@@ -164,33 +164,20 @@ function gameLoop() {
   }
 }
 
-window.addEventListener("keydown", (event) => {
-  const { code } = event;
+function movePlayer(direction) {
+  const playerRect = gameState.player;
+  const canvasLimit = [0, canvasWidth - 1];
 
-  if (code == "KeyA") {
-    const playerRect = gameState.player;
+  playerRect.x += direction == "right" ? 1 : -1;
 
-    playerRect.x -= 1;
-
-    if (playerRect.x < 0) {
-      playerRect.x = 0;
-    }
-
-    gameState.player.x = playerRect.x;
+  if (playerRect.x < canvasLimit[0]) {
+    playerRect.x = canvasLimit[0];
+  } else if (playerRect.x > canvasLimit[1]) {
+    playerRect.x = canvasLimit[1];
   }
 
-  if (code == "KeyD") {
-    const playerRect = gameState.player;
-
-    playerRect.x += 1;
-
-    if (playerRect.x > canvasWidth - 1) {
-      playerRect.x = canvasWidth - 1;
-    }
-
-    gameState.player.x = playerRect.x;
-  }
-});
+  gameState.player = playerRect;
+}
 
 export function gameSetup() {
   gameState = {
@@ -213,6 +200,18 @@ export function gameSetup() {
   gameState.running = true;
   setTimeout(gameLoop, 500);
 }
+
+window.addEventListener("keydown", (event) => {
+  const { code } = event;
+
+  if (code == "KeyA" || code == "ArrowLeft") {
+    movePlayer("left");
+  }
+
+  if (code == "KeyD" || code == "ArrowRight") {
+    movePlayer("right");
+  }
+});
 
 setStartCallback(gameSetup);
 bootstrap(canvas, canvasWidth, canvasHeight);
