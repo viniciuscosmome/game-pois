@@ -2,7 +2,7 @@ import { updateUI, setStartCallback, flash, shake } from "./ui.js";
 
 const socket = io();
 
-const canvasWidth = 10;
+const canvasWidth = 7;
 const canvasHeight = 20;
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");

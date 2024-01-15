@@ -4,7 +4,7 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "dev": "node --watch src/index.js"
+    "initial-concept": "node --watch version/initial-concept/server/index.js"
   },
   "dependencies": {
     "express": "4",
