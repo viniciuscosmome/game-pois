@@ -1,0 +1,12 @@
+{
+  "name": "game-pois",
+  "version": "0.0.1",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "express": "4"
+  }
+}

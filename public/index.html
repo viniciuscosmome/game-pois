@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ARENA - GAME POIS</title>
+    <link rel="stylesheet" href="assets/styles/main.css" />
+  </head>
+  <body>
+    <div id="game-area" class="game-area">
+      <div class="winner-message">
+        Você venceu
+        <div class="details">
+          Coletou <span class="display-points">0</span> pontos!
+        </div>
+      </div>
+
+      <div class="loser-message">
+        Você perdeu!
+        <div class="details">
+          Integridade afetada :/
+        </div>
+      </div>
+
+      <canvas id="canvas" class="canvas"></canvas>
+      <div class="display">
+        <div class="display-group">
+          <strong>Pontos:</strong>
+          <span class="display-points">0</span>
+        </div>
+
+        <div class="display-group">
+          <strong>Integridade:</strong>
+          <span id="player-life" class="player-life">0</span>
+        </div>
+
+        <div class="display-group">
+          <button id="restart-game" type="button" class="restart start-mode">
+            Iniciar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./assets/scripts/engine.js"></script>
+  </body>
+</html>
