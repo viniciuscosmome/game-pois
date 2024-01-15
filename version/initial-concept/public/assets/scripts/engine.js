@@ -2,12 +2,11 @@ import { updateUI, setStartCallback, flash, shake } from "./ui.js";
 
 const socket = io();
 
-const canvasWidth = 7;
+const canvasWidth = 10;
 const canvasHeight = 20;
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 const collectAudio = new Audio("assets/audio/collect.mp3");
-const timeout = 1000 / 60;
 const updateStarsDelay = 150;
 const spawnStarDelay = 1000;
 const spawnStarsAmount = 50;
@@ -15,7 +14,6 @@ const starValue = 20;
 
 let gameState = {};
 let spawnedStars = 0;
-let gameloopInterval = setTimeout(0);
 let lastUpdateStars = 0;
 let leftStarsAmount = spawnStarsAmount;
 let lastSpawnStars = 0;
@@ -156,15 +154,13 @@ function gameLoop() {
   checkCollision();
   checkGameState();
 
-  if (gameState.running) {
-    gameloopInterval = setTimeout(() => {
-      requestAnimationFrame(gameLoop);
-    }, timeout);
-  } else {
-    clearTimeout(gameloopInterval);
+  if (!gameState.running) {
     clearTimeout(spawnStarsloopInterval);
     updateUI(gameState);
+    return
   }
+
+  requestAnimationFrame(gameLoop);
 }
 
 export function movePlayer(direction) {
