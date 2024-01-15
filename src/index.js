@@ -10,14 +10,27 @@ const io = new Server(server);
 app.use(express.static("public"));
 
 let screenId = "";
+let joystickId = "";
 
 io.on("connect", (socket) => {
   socket.on("registry-screen", () => {
     screenId = socket.id;
   });
 
+  socket.on("registry-joystick", () => {
+    joystickId = socket.id;
+  });
+
   socket.on("move-player", (data) => {
-    if (screenId) socket.broadcast.to(screenId).emit("move-player", data);
+    if (screenId) {
+      socket.broadcast.to(screenId).emit("move-player", data);
+    }
+  });
+
+  socket.on("player-damage", () => {
+    if (joystickId) {
+      socket.broadcast.to(joystickId).emit("player-damage");
+    }
   });
 });
 

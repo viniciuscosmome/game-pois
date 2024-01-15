@@ -28,10 +28,15 @@
       }
 
       buttonLeft.addEventListener("click", moveLeft);
-      buttonLeft.addEventListener("touchstart", moveLeft);
-
       buttonRight.addEventListener("click", moveRight);
-      buttonRight.addEventListener("touchstart", moveRight);
+
+      socket.on("connect", () => {
+        socket.emit("registry-joystick");
+      });
+
+      socket.on("player-damage", () => {
+        navigator.vibrate(300);
+      });
     </script>
   </body>
 </html>

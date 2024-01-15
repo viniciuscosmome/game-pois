@@ -1,5 +1,7 @@
 import { updateUI, setStartCallback, flash, shake } from "./ui.js";
 
+const socket = io();
+
 const canvasWidth = 10;
 const canvasHeight = 20;
 const canvas = document.getElementById("canvas");
@@ -19,11 +21,11 @@ let leftStarsAmount = spawnStarsAmount;
 let lastSpawnStars = 0;
 let spawnStarsloopInterval = setTimeout(0);
 
-function bootstrap(canvas, width, height) {
-  canvas.style.width = `${width * 30}px`;
-  canvas.style.height = `${height * 30}px`;
-  canvas.width = width;
-  canvas.height = height;
+export function bootstrap() {
+  canvas.style.width = `${canvasWidth * 30}px`;
+  canvas.style.height = `${canvasHeight * 30}px`;
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
 }
 
 function draw(context, rect) {
@@ -102,6 +104,7 @@ function updateStars() {
       excludeList.push(starId);
       gameState.life -= starValue;
       shake();
+      socket.emit("player-damage");
     }
 
     gameState.stars[starId].y = starRect.y;
@@ -215,5 +218,13 @@ window.addEventListener("keydown", (event) => {
   }
 });
 
+socket.on("connect", () => {
+  socket.emit("registry-screen");
+});
+
+socket.on("move-player", (data) => {
+  movePlayer(data);
+});
+
 setStartCallback(gameSetup);
-bootstrap(canvas, canvasWidth, canvasHeight);
+bootstrap();

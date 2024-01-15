@@ -42,18 +42,6 @@
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script type="module">
-      import { movePlayer } from "./assets/scripts/engine.js";
-
-      const socket = io();
-
-      socket.on("connect", () => {
-        socket.emit("registry-screen");
-      });
-
-      socket.on("move-player", (data) => {
-        movePlayer(data);
-      });
-    </script>
+    <script type="module" src="assets/scripts/engine.js"></script>
   </body>
 </html>
