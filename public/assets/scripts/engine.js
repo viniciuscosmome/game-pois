@@ -6,8 +6,8 @@ const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 const collectAudio = new Audio("assets/audio/collect.mp3");
 const timeout = 1000 / 60;
-const updateStarsDelay = 100;
-const spawnStarDelay = 950;
+const updateStarsDelay = 150;
+const spawnStarDelay = 1000;
 const spawnStarsAmount = 50;
 const starValue = 20;
 
@@ -164,7 +164,9 @@ function gameLoop() {
   }
 }
 
-function movePlayer(direction) {
+export function movePlayer(direction) {
+  if (!gameState.running) return;
+
   const playerRect = gameState.player;
   const canvasLimit = [0, canvasWidth - 1];
 

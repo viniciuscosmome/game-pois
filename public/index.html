@@ -18,9 +18,7 @@
 
       <div class="loser-message">
         Você perdeu!
-        <div class="details">
-          Integridade afetada :/
-        </div>
+        <div class="details">Integridade afetada :/</div>
       </div>
 
       <canvas id="canvas" class="canvas"></canvas>
@@ -43,6 +41,19 @@
       </div>
     </div>
 
-    <script type="module" src="./assets/scripts/engine.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module">
+      import { movePlayer } from "./assets/scripts/engine.js";
+
+      const socket = io();
+
+      socket.on("connect", () => {
+        socket.emit("registry-screen");
+      });
+
+      socket.on("move-player", (data) => {
+        movePlayer(data);
+      });
+    </script>
   </body>
 </html>

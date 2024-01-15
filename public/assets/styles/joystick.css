@@ -1,0 +1,31 @@
+.joystick,
+.button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.joystick {
+  padding: 1rem;
+}
+
+.button {
+  height: 80vh;
+  border: 1px solid gray;
+  background-color: #242323;
+  color: #fafafa;
+  font-size: 3rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .2s ease-out;
+  user-select: none;
+}
+
+.button.left {
+  border-radius: 1rem 0 0 1rem;
+}
+
+.button.right {
+  border-radius: 0 1rem 1rem 0;
+}

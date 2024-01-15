@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CONTROLE - GAME POIS</title>
+    <link rel="stylesheet" href="assets/styles/main.css" />
+    <link rel="stylesheet" href="assets/styles/joystick.css" />
+  </head>
+  <body>
+    <div class="joystick">
+      <button id="move-left" class="button left">&lt;</button>
+      <button id="move-right" class="button right">&gt;</button>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module">
+      const buttonLeft = document.getElementById("move-left");
+      const buttonRight = document.getElementById("move-right");
+      const socket = io();
+
+      function moveLeft() {
+        socket.emit("move-player", "left");
+      }
+
+      function moveRight() {
+        socket.emit("move-player", "right");
+      }
+
+      buttonLeft.addEventListener("click", moveLeft);
+      buttonLeft.addEventListener("touchstart", moveLeft);
+
+      buttonRight.addEventListener("click", moveRight);
+      buttonRight.addEventListener("touchstart", moveRight);
+    </script>
+  </body>
+</html>
