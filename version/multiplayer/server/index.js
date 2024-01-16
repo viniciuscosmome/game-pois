@@ -2,6 +2,7 @@ import express from "express";
 import { createServer } from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import gameNetwork from './game/network.js';
 
 const PORT = 3000;
 const app = express();
@@ -9,6 +10,8 @@ const server = createServer(app);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 app.use(express.static(path.join(__dirname, "..", "public")));
+
+gameNetwork(server);
 
 server.listen(PORT, () => {
   const now = new Date().toLocaleString("pt-br").split(",")[1].trim();
