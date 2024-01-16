@@ -1,0 +1,35 @@
+.display {
+  padding: 2rem;
+  border-radius: 1rem;
+  border: 1px solid gray;
+  text-align: center;
+}
+
+.title {
+  padding: .5rem;
+  white-space: nowrap;
+}
+
+.select {
+  display: inline-block;
+  margin: .25rem;
+  padding: .5rem 1rem;
+  border-radius: .5rem;
+  border: 1px solid gray;
+  background-color: #f2f2f2;
+  color: #171717;
+  text-decoration: none;
+  transition: background-color .21s ease-out;
+}
+
+.select:hover {
+  background-color: gainsboro;
+}
+
+.details {
+  text-align: start;
+}
+
+.details h4 {
+  margin-top: 1rem;
+}
