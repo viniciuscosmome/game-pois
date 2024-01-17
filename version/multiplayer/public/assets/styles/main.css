@@ -1,3 +1,20 @@
+:root {
+  --green-100: #04D99D;
+  --green-200: #04BF8A;
+  --green-300: #038C65;
+  --green-400: #025951;
+  --green-500: #0B0D0C;
+
+  --orange-100: #F2CB05;
+  --orange-200: #F29F05;
+  --orange-300: #F25C05;
+  --orange-400: #8C2703;
+  --orange-500: #260101;
+
+  --white: #fafafa;
+  --gray: #242424;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -9,4 +26,7 @@ body {
   display: flex;
   justify-content: center;
   padding: 1rem;
+  min-height: 100vh;
+  background-color: var(--green-500);
+  background-image: radial-gradient(ellipse at top, var(--green-400), transparent);
 }

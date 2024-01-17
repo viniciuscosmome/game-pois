@@ -1,53 +1,56 @@
-import { Server } from "socket.io";
+import gameController from './controller.js';
 
-export default function network(server, game) {
-  const io = new Server(server);
+const game = gameController();
 
-  io.on("connection", (socket) => {
-    const currentId = socket.id;
+export default function network(socket) {
+  const currentId = socket.id;
 
-    socket.on("disconnect", () => {
-      const params = {
-        playerId: currentId,
-      };
+  socket.on("disconnect", () => {
+    const params = {
+      playerId: currentId,
+    };
 
-      game.removePlayer(params);
-    });
+    game.removePlayer(params);
+  });
 
-    socket.on("start-game", () => {
-      game.start();
-    });
+  socket.on("add-player", (data) => {
+    const params = {
+      playerId: currentId,
+      nickname: data.nickname,
+    };
 
-    socket.on("add-player", (data) => {
-      const params = {
-        playerId: currentId,
-        nickname: data.nickname,
-      };
+    game.addPlayer(params);
+  });
 
-      game.addPlayer(params);
-    });
+  socket.on("join-to-viewers", () => {
+    socket.join("viewers");
+    socket.emit("sync-state", game.state);
+  });
 
-    // controller
-    socket.on("move-left", () => {
-      const params = {
-        playerId: currentId,
-        direction: "left",
-      };
+  // controllers
+  socket.on("start-game", () => {
+    game.start();
+  });
 
-      game.movePlayer(params);
-    });
+  socket.on("move-left", () => {
+    const params = {
+      playerId: currentId,
+      direction: "left",
+    };
 
-    socket.on("move-right", () => {
-      const params = {
-        playerId: currentId,
-        direction: "right",
-      };
+    game.movePlayer(params);
+  });
 
-      game.movePlayer(params);
-    });
+  socket.on("move-right", () => {
+    const params = {
+      playerId: currentId,
+      direction: "right",
+    };
 
-    game.subscribeCallback(() => {
-      socket.emit("update-screen", game.state);
-    });
+    game.movePlayer(params);
+  });
+
+  game.subscribeCallback(() => {
+    io.to("viewers").emit("sync-state", game.state);
   });
 }
