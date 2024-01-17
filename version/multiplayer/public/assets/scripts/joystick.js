@@ -17,19 +17,19 @@ const buttonLeft = document.getElementById("button-left");
 const buttonRight = document.getElementById("button-right");
 
 function moveLeft() {
-  const comand = {
+  const command = {
     type: "move-left",
   };
 
-  notify(comand);
+  notify(command);
 }
 
 function moveRight() {
-  const comand = {
+  const command = {
     type: "move-right",
   };
 
-  notify(comand);
+  notify(command);
 }
 
 buttonLeft.addEventListener("click", moveLeft);

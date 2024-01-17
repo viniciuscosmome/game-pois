@@ -1,13 +1,22 @@
 import { Server } from "socket.io";
-import Controller from "./controller.js";
 
-const game = new Controller();
-
-export default function network(server) {
+export default function network(server, game) {
   const io = new Server(server);
 
   io.on("connection", (socket) => {
     const currentId = socket.id;
+
+    socket.on("disconnect", () => {
+      const params = {
+        playerId: currentId,
+      };
+
+      game.removePlayer(params);
+    });
+
+    socket.on("start-game", () => {
+      game.start();
+    });
 
     socket.on("registry-joystick", (data) => {
       const params = {
@@ -16,14 +25,6 @@ export default function network(server) {
       };
 
       game.addPlayer(params);
-    });
-
-    socket.on("disconnect", () => {
-      const params = {
-        playerId: currentId,
-      };
-
-      game.removePlayer(params);
     });
 
     // controller
@@ -43,6 +44,10 @@ export default function network(server) {
       };
 
       game.movePlayer(params);
+    });
+
+    game.subscribeCallback(() => {
+      socket.emit("update-screen", game.state);
     });
   });
 }
