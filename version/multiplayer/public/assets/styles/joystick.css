@@ -1,0 +1,10 @@
+.joystick {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  width: 500px;
+  height: 350px;
+}

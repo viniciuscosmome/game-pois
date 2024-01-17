@@ -1,23 +1,32 @@
-export default function Controller(availableAreas = 4, numberOfStars = 10) {
+export default function Controller() {
+  const availableAreas = 4;
+  const numberOfStars = 10;
+  const spawnStarsDelay = 1200;
+  const updateStarsDelay = 300;
   const gameAreas = { available: [] };
-  const state = {
+  const initialState = {
     running: false,
+    availableAreas,
     areas: {},
     canvas: {
       width: 7,
       height: 20,
     },
   };
-  const spawnStarsDelay = 1200;
-  const updateStarsDelay = 300;
+  const state = {};
   let allStarsSpawned = false;
   let spawnStarInterval;
   let updateStarsPosition;
+  let intervalToStartUpdate;
 
   let notify = () => {};
 
   function subscribeCallback(cb) {
     notify = cb;
+  }
+
+  function syncStates() {
+    Object.assign(state, initialState);
   }
 
   function addPlayer(data) {
@@ -30,25 +39,27 @@ export default function Controller(availableAreas = 4, numberOfStars = 10) {
       x: gameAreas[areaNumber].start,
     };
 
-    state.areas[playerId] = {
+    initialState.areas[playerId] = {
       areaNumber,
       player: playerState,
       stars: [],
     };
 
+    syncStates();
     notify();
   }
 
   function removePlayer(data) {
     const { playerId } = data;
 
-    if (!state.areas[playerId]) return;
+    if (!initialState.areas[playerId]) return;
 
-    const { areaNumber } = state.areas[playerId];
+    const { areaNumber } = initialState.areas[playerId];
 
-    delete state.areas[playerId];
+    delete initialState.areas[playerId];
     gameAreas.available.push(areaNumber);
 
+    syncStates();
     notify();
   }
 
@@ -61,6 +72,8 @@ export default function Controller(availableAreas = 4, numberOfStars = 10) {
     } else {
       player.x = Math.max(player.x - 1, gameAreas[areaNumber].start);
     }
+
+    notify();
   }
 
   function clearStars() {
@@ -100,6 +113,7 @@ export default function Controller(availableAreas = 4, numberOfStars = 10) {
 
           if (collisionWithPlayer) {
             // oncollision
+            console.log("colidiu com um jogador");
           }
 
           if (isOutOfScreen || collisionWithPlayer) {
@@ -151,6 +165,7 @@ export default function Controller(availableAreas = 4, numberOfStars = 10) {
     clearStars();
     clearInterval(spawnStarInterval);
     clearInterval(updateStarsPosition);
+    clearTimeout(intervalToStartUpdate);
 
     spawnStarInterval = setInterval(() => {
       if (count < 1 || !state.running) {
@@ -164,20 +179,25 @@ export default function Controller(availableAreas = 4, numberOfStars = 10) {
       count--;
     }, spawnStarsDelay);
 
-    setTimeout(startUpdateLoop, spawnStarsDelay);
+    intervalToStartUpdate = setTimeout(startUpdateLoop, spawnStarsDelay);
   }
 
   function start() {
-    if (!Object.keys(state.areas).length) return;
+    syncStates();
 
     state.running = true;
+    if (!Object.keys(initialState.areas).length) {
+      state.running = false;
+      return;
+    }
+
     startStarsLoop(numberOfStars);
   }
 
   function genAreas() {
     for (let index = 0; index < availableAreas; index++) {
-      const start = index * state.canvas.width;
-      const end = start + state.canvas.width - 1;
+      const start = index * initialState.canvas.width;
+      const end = start + initialState.canvas.width - 1;
 
       const arealimit = {
         start,
@@ -187,6 +207,8 @@ export default function Controller(availableAreas = 4, numberOfStars = 10) {
       gameAreas.available.push(index);
       gameAreas[index] = arealimit;
     }
+
+    syncStates();
   }
 
   genAreas();

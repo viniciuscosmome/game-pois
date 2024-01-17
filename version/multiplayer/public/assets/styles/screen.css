@@ -3,8 +3,8 @@
   image-rendering: crisp-edges;
   image-rendering: -moz-crisp-edges;
 
-  border-radius: 2rem;
-  border: .5rem outset var(--green-400);
+  border-radius: .5rem;
+  border: .25rem solid var(--green-400);
   background-color: var(--green-100);
   box-shadow: 0 0 12rem var(--green-100);
 }
