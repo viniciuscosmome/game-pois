@@ -41,6 +41,9 @@ export default function Controller(availableAreas = 4, numberOfStars = 10) {
 
   function removePlayer(data) {
     const { playerId } = data;
+
+    if (!state.areas[playerId]) return;
+
     const { areaNumber } = state.areas[playerId];
 
     delete state.areas[playerId];
@@ -165,6 +168,8 @@ export default function Controller(availableAreas = 4, numberOfStars = 10) {
   }
 
   function start() {
+    if (!Object.keys(state.areas).length) return;
+
     state.running = true;
     startStarsLoop(numberOfStars);
   }
