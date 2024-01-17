@@ -18,7 +18,7 @@ export default function network(server, game) {
       game.start();
     });
 
-    socket.on("registry-joystick", (data) => {
+    socket.on("add-player", (data) => {
       const params = {
         playerId: currentId,
         nickname: data.nickname,

@@ -6,7 +6,7 @@ function notify(command) {
 
 socket.on("connect", () => {
   const command = {
-    type: "registry-joystick",
+    type: "add-player",
   };
 
   notify(command);
