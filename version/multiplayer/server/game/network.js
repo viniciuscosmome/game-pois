@@ -27,10 +27,6 @@ export default function network(socket, io) {
     socket.emit("bootstrap", game.state);
   });
 
-  game.subscribeCallback(() => {
-    io.to(viewersRoom).emit("sync-state", game.state);
-  });
-
   // controllers
   socket.on("start-game", () => {
     game.start();
@@ -55,4 +51,10 @@ export default function network(socket, io) {
 
     game.movePlayer(params);
   });
+
+  function syncState(state) {
+    io.to(viewersRoom).emit("sync-state", state);
+  }
+
+  game.subscribeListeners(syncState);
 }

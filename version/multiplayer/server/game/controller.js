@@ -19,20 +19,29 @@ export default function Controller() {
   let updateStarsPosition;
   let intervalToStartUpdate;
 
-  let notify = () => {};
+  const listeningChanges = [];
 
-  function subscribeCallback(cb) {
-    notify = cb;
+  function notifyListeners(param) {
+    listeningChanges.forEach((listener) => listener(param));
   }
 
-  function syncStates() {
-    Object.assign(state, initialState);
+  function subscribeListeners(cb) {
+    listeningChanges.push(cb);
+  }
+
+  function syncStates(partial) {
+    Object.assign(state, partial);
   }
 
   function addPlayer(data) {
+    const areaNumber = gameAreas.available.shift();
+
+    if (typeof areaNumber !== "number" || areaNumber == NaN) {
+      return "Sem áreas disponíveis";
+    }
+
     const { playerId } = data;
     const nickname = (Date.now() % 1e7).toString();
-    const areaNumber = gameAreas.available.shift();
 
     const playerState = {
       nickname,
@@ -45,8 +54,9 @@ export default function Controller() {
       stars: [],
     };
 
-    syncStates();
-    notify();
+    syncStates({
+      areas: initialState.areas,
+    });
   }
 
   function removePlayer(data) {
@@ -59,8 +69,9 @@ export default function Controller() {
     delete initialState.areas[playerId];
     gameAreas.available.push(areaNumber);
 
-    syncStates();
-    notify();
+    syncStates({
+      areas: initialState.areas,
+    });
   }
 
   function movePlayer(data) {
@@ -73,7 +84,9 @@ export default function Controller() {
       player.x = Math.max(player.x - 1, gameAreas[areaNumber].start);
     }
 
-    notify();
+    notifyListeners({
+      areas: state.areas,
+    });
   }
 
   function clearStars() {
@@ -146,17 +159,17 @@ export default function Controller() {
 
   function startUpdateLoop() {
     updateStarsPosition = setInterval(() => {
-      if (!state.running) {
-        return clearInterval(updateStarsPosition);
+      if (!existsStars()) {
+        state.running = false;
+        clearInterval(updateStarsPosition);
+        notifyListeners(state);
+        return;
       }
 
       moveStars();
-      notify();
-
-      if (!existsStars()) {
-        state.running = false;
-        notify();
-      }
+      notifyListeners({
+        areas: state.areas,
+      });
     }, updateStarsDelay);
   }
 
@@ -174,7 +187,6 @@ export default function Controller() {
       }
 
       spawnStar();
-      notify();
 
       count--;
     }, spawnStarsDelay);
@@ -183,7 +195,7 @@ export default function Controller() {
   }
 
   function start() {
-    syncStates();
+    syncStates(initialState);
 
     state.running = true;
     if (!Object.keys(initialState.areas).length) {
@@ -208,7 +220,7 @@ export default function Controller() {
       gameAreas[index] = arealimit;
     }
 
-    syncStates();
+    syncStates(initialState);
   }
 
   genAreas();
@@ -219,6 +231,6 @@ export default function Controller() {
     removePlayer,
     movePlayer,
     start,
-    subscribeCallback,
+    subscribeListeners,
   };
 }
